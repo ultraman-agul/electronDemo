@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h3>hello</h3>
+    <p>asdjsakljfasfjasl</p>
+    <button id='btn'>点击复制</button>
+    <script>
+        // clipboard 在主进程和渲染进程中都能直接使用，所以不用remote
+        const { clipboard } = require('electron')
+        let btn = document.querySelector('#btn')
+        let content = document.querySelector('p')
+        btn.onclick = function () {
+            clipboard.writeText(content.innerText)
+            alert('success')
+        }
+    </script>
+</body>
+
+</html>

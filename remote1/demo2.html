@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>图片秀</h1>
+    <button id='btn'>请选择图片</button>
+    <button id='savebtn'>保存</button>
+    <img src="" alt="" id='image'>
+    <script>
+        const { dialog } = require('electron').remote
+        const fs = require('fs')
+        var btn = document.querySelector('#btn')
+        btn.onclick = function(){
+            dialog.showOpenDialog({
+                title: '请选择您喜欢的图片',
+                defaultPath: "1.jpg",
+                filters: [{name: 'img', extensions: ['jpg']}],
+                buttonLabel: '打开你心爱的图片'
+            }).then((result)=>{
+                console.log(result)
+                let image = document.querySelector('#image')
+                image.setAttribute('src', result.filePaths[0])
+            }).catch(err=>{
+                console.log(err)
+            })
+        }
+
+        var savebtn = document.querySelector('#savebtn')
+        savebtn.onclick = function(){
+            dialog.showSaveDialog({
+                title: '保存',
+            }).then(result => {
+                fs.writeFileSync(result.filePath, 'baidu.com')
+            }).catch((err)=>{
+                console.log(err)
+            })
+        }
+    </script>
+</body>
+</html>

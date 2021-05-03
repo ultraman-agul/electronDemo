@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="btn">点击打开文件</button>
+    <button id='saveBtn'>点击保存文件</button>
+    <button id='openMessageBox'>打开消息框</button>
+    <div id="content">
+        <img alt="" width="300" height='300'>
+    </div>
+
+
+    <button id="noticeBtn">底部信息</button>
+    <script>
+        const fs = require('fs')
+        let btn = document.querySelector('#btn')
+        let content = document.querySelector('#content')
+        let saveBtn = document.querySelector('#saveBtn')
+        const { dialog } = require('electron').remote
+        btn.onclick = function () {
+            dialog.showOpenDialog({
+                title: '请选择你喜欢的照片',
+                defaultPath: 'img.jpg',
+                filters: [{ name: 'img' }, { extensions: ['jpg', 'png'] }],
+                buttonLabel: '打开照片'
+            }).then(res => {
+                let img = document.querySelector('img')
+                img.setAttribute('src', res.filePaths[0])
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+        saveBtn.onclick = function () {
+            dialog.showSaveDialog({
+                title: '保存我的文件'
+            }).then(res => {
+                fs.writeFileSync(res.filePath, 'hello agul！')
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+        openMessageBox.onclick = function () {
+            dialog.showMessageBox({
+                type: 'warning',
+                title: '今天你学习了吗？',
+                message: '人生唯有运动和学习不可辜负',
+                buttons: ['已出门', '没出门']
+            }).then(res => console.log(res))
+        }
+
+        // 监听子窗体传来的消息
+        window.addEventListener('message', function (e) {
+            console.log(e)
+            content.innerHTML = e.data
+        })
+
+        // 断网提醒
+        window.addEventListener('online', function () {
+            alert('已联网')
+        })
+        window.addEventListener('offline', function () {
+            alert('已断网')
+        })
+
+
+        // 桌面底部消息提醒
+        let noticeBtn = document.getElementById('noticeBtn');
+        let option = {
+            title: '打工人，早上好',
+            body: '今天又是美好的一天，奥力给！'
+        }
+        noticeBtn.onclick = function () {
+            new window.Notification(option.title, option);
+        }
+    </script>
+</body>
+
+</html>
